@@ -3,10 +3,10 @@
 package main
 
 import (
-	"github.com/brvoisin/planetwarsbot"
+	"github.com/brvoisin/planetwars"
 )
 
 func main() {
 	bot := NewStarterBot()
-	planetwarsbot.Run(bot)
+	planetwars.Run(bot)
 }

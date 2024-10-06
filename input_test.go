@@ -1,4 +1,4 @@
-package planetwarsbot_test
+package planetwars_test
 
 import (
 	"io"
@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/brvoisin/planetwarsbot"
+	"github.com/brvoisin/planetwars"
 )
 
 const input = `P 0    0    1 34 2
@@ -25,7 +25,7 @@ func TestParseInputMap(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want planetwarsbot.Map
+		want planetwars.Map
 	}{
 		{
 			name: "specification example",
@@ -35,33 +35,33 @@ func TestParseInputMap(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := planetwarsbot.ParseInputMap(tt.args.input); !reflect.DeepEqual(got, tt.want) {
+			if got := planetwars.ParseInputMap(tt.args.input); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("parseInputMap() = %#v, want %#v", got, tt.want)
 			}
 		})
 	}
 }
 
-func expectedMap() planetwarsbot.Map {
-	return planetwarsbot.Map{
-		Planets: []planetwarsbot.Planet{
+func expectedMap() planetwars.Map {
+	return planetwars.Map{
+		Planets: []planetwars.Planet{
 			{
 				ID:       0,
-				Position: planetwarsbot.Point{X: 0, Y: 0},
+				Position: planetwars.Point{X: 0, Y: 0},
 				Owner:    1,
 				Ships:    34,
 				Growth:   2,
 			},
 			{
 				ID:       1,
-				Position: planetwarsbot.Point{X: 7, Y: 9},
+				Position: planetwars.Point{X: 7, Y: 9},
 				Owner:    2,
 				Ships:    34,
 				Growth:   2,
 			},
 			{
 				ID: 2,
-				Position: planetwarsbot.Point{
+				Position: planetwars.Point{
 					X: 3.140000104904175,
 					Y: 2.7100000381469727,
 				}, // Precision issue with float64 (not float32)
@@ -70,7 +70,7 @@ func expectedMap() planetwarsbot.Map {
 				Growth: 5,
 			},
 		},
-		Fleets: []planetwarsbot.Fleet{
+		Fleets: []planetwars.Fleet{
 			{
 				Owner:         1,
 				Ships:         15,

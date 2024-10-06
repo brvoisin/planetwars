@@ -1,3 +1,3 @@
-module github.com/brvoisin/planetwarsbot
+module github.com/brvoisin/planetwars
 
 go 1.23

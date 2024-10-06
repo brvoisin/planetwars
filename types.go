@@ -1,4 +1,4 @@
-package planetwarsbot
+package planetwars
 
 type Point struct {
 	X float64

@@ -1,17 +1,17 @@
 package main
 
 import (
-	"github.com/brvoisin/planetwarsbot"
+	"github.com/brvoisin/planetwars"
 )
 
 type starterBot struct{}
 
-func NewStarterBot() planetwarsbot.Player {
+func NewStarterBot() planetwars.Player {
 	return &starterBot{}
 }
 
 // DoTurn implements Player.
-func (b *starterBot) DoTurn(planetMap planetwarsbot.Map) []planetwarsbot.Order {
+func (b *starterBot) DoTurn(planetMap planetwars.Map) []planetwars.Order {
 	// TODO
 	return nil
 }
