@@ -48,7 +48,7 @@ func (m Map) PlanetByID(ID PlanetID) Planet {
 }
 
 func (m Map) MyPlanets() []Planet {
-	result := make([]Planet, 0)
+	result := make([]Planet, 0, len(m.Planets))
 	for _, p := range m.Planets {
 		if p.Owner == Myself {
 			result = append(result, p)
