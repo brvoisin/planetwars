@@ -3,7 +3,7 @@
 `planetwars` is a Go package to quickly start a Bot for the coding game
 [Planet Wars](https://xtevenx.github.io/planet-wars-starterpackage/).
 
-Add your bot implementation in `cmd/yourbotname` that could be copied from
+Add your bot implementation in `players/yourbotname` that could be copied from
 `cmd/starterbot`.
 
 Build it with:
