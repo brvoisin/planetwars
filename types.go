@@ -48,23 +48,11 @@ func (m Map) PlanetByID(ID PlanetID) Planet {
 }
 
 func (m Map) MyPlanets() []Planet {
-	result := make([]Planet, 0, len(m.Planets))
-	for _, p := range m.Planets {
-		if p.Owner == Myself {
-			result = append(result, p)
-		}
-	}
-	return result
+	return Filter(m.Planets, func(p Planet) bool { return p.Owner == Myself })
 }
 
 func (m Map) FleetsTo(ID PlanetID) []Fleet {
-	result := make([]Fleet, 0, len(m.Fleets))
-	for _, f := range m.Fleets {
-		if f.Dest == ID {
-			result = append(result, f)
-		}
-	}
-	return result
+	return Filter(m.Fleets, func(f Fleet) bool { return f.Dest == ID })
 }
 
 type Order struct {
