@@ -57,6 +57,16 @@ func (m Map) MyPlanets() []Planet {
 	return result
 }
 
+func (m Map) FleetsTo(ID PlanetID) []Fleet {
+	result := make([]Fleet, 0, len(m.Fleets))
+	for _, f := range m.Fleets {
+		if f.Dest == ID {
+			result = append(result, f)
+		}
+	}
+	return result
+}
+
 type Order struct {
 	Source PlanetID
 	Dest   PlanetID
