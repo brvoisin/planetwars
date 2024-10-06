@@ -1,4 +1,4 @@
-// Bruno's Planet Wars bot
+// Starter Planet Wars bot
 
 package main
 
