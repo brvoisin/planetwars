@@ -51,6 +51,10 @@ func (m Map) MyPlanets() []Planet {
 	return Filter(m.Planets, func(p Planet) bool { return p.Owner == Myself })
 }
 
+func (m Map) NotMyPlanets() []Planet {
+	return Filter(m.Planets, func(p Planet) bool { return p.Owner != Myself })
+}
+
 func (m Map) MyFleets() []Fleet {
 	return Filter(m.Fleets, func(f Fleet) bool { return f.Owner == Myself })
 }

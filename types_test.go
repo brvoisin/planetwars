@@ -44,6 +44,43 @@ func TestMapMyPlanets(t *testing.T) {
 	}
 }
 
+func TestMapNotMyPlanets(t *testing.T) {
+	type fields struct {
+		Planets []planetwars.Planet
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   []planetwars.Planet
+	}{
+		{
+			name: "filter my planets",
+			fields: fields{
+				Planets: []planetwars.Planet{
+					{ID: 0, Owner: planetwars.Neutral},
+					{ID: 1, Owner: planetwars.Myself},
+					{ID: 2, Owner: planetwars.Opponent},
+					{ID: 3, Owner: planetwars.Myself},
+				},
+			},
+			want: []planetwars.Planet{
+				{ID: 0, Owner: planetwars.Neutral},
+				{ID: 2, Owner: planetwars.Opponent},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			m := planetwars.Map{
+				Planets: tt.fields.Planets,
+			}
+			if got := m.NotMyPlanets(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Map.NotMyPlanets() = %#v, want %#v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestMapMyFleets(t *testing.T) {
 	type fields struct {
 		Planets []planetwars.Planet
