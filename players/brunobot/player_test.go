@@ -86,6 +86,31 @@ func TestDoTurn(t *testing.T) {
 				{Source: 0, Dest: 3, Ships: 31},
 			},
 		},
+		{
+			name: "consider growth",
+			args: args{planetMap: planetwars.Map{
+				Planets: []planetwars.Planet{
+					{
+						ID:       0,
+						Position: planetwars.Point{X: 0, Y: 0},
+						Owner:    planetwars.Myself,
+						Ships:    100,
+						Growth:   1,
+					},
+					{
+						ID:       1,
+						Position: planetwars.Point{X: 0, Y: 5},
+						Owner:    planetwars.Opponent,
+						Ships:    50,
+						Growth:   2,
+					},
+				},
+			}},
+			want: []planetwars.Order{
+				// The ships on opponent planet will increase by 10 in 5 turns.
+				{Source: 0, Dest: 1, Ships: 61},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
