@@ -21,6 +21,9 @@ func (b *brunoBot) DoTurn(pwMap planetwars.Map) []planetwars.Order {
 			remainingShips[candidate.Source] = pwMap.PlanetByID(candidate.Source).Ships
 		}
 		fleetShips := computeNeededFleetShips(pwMap, candidate.Source, candidate.Dest)
+		if fleetShips <= 0 {
+			continue
+		}
 		remainingShips[candidate.Source] -= fleetShips
 		if remainingShips[candidate.Source] >= 10 {
 			orders = append(
@@ -39,9 +42,16 @@ func computeNeededFleetShips(
 ) planetwars.Ships {
 	pSrc := pwMap.PlanetByID(source)
 	pDest := pwMap.PlanetByID(dest)
-	var growthAtArrival int
+	result := pDest.Ships
 	if pDest.Owner == planetwars.Opponent {
-		growthAtArrival = int(planetwars.Distance(pSrc, pDest) * float64(pDest.Growth))
+		result += planetwars.Ships(planetwars.Distance(pSrc, pDest) * float64(pDest.Growth))
 	}
-	return pDest.Ships + planetwars.Ships(growthAtArrival) + 1
+	for _, f := range pwMap.FleetsTo(dest) {
+		if f.Owner == pDest.Owner {
+			result += f.Ships
+		} else {
+			result -= f.Ships
+		}
+	}
+	return result + 1
 }
