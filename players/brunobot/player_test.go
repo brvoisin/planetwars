@@ -111,12 +111,119 @@ func TestDoTurn(t *testing.T) {
 				{Source: 0, Dest: 1, Ships: 61},
 			},
 		},
+		{
+			name: "consider fleets arrived before my new fleet",
+			args: args{planetMap: planetwars.Map{
+				Planets: []planetwars.Planet{
+					{
+						ID:       0,
+						Position: planetwars.Point{X: 0, Y: 0},
+						Owner:    planetwars.Myself,
+						Ships:    100,
+						Growth:   1,
+					},
+					{
+						ID:       1,
+						Position: planetwars.Point{X: 0, Y: 5},
+						Owner:    planetwars.Opponent,
+						Ships:    50,
+						Growth:   1,
+					},
+					{
+						ID:       2,
+						Position: planetwars.Point{X: 10, Y: 10},
+						Owner:    planetwars.Opponent,
+						Ships:    100,
+						Growth:   1,
+					},
+				},
+				Fleets: []planetwars.Fleet{
+					{
+						Owner:         planetwars.Myself,
+						Ships:         10,
+						Source:        0,
+						Dest:          1,
+						TotalTurn:     5,
+						RemainingTurn: 2,
+					},
+					{
+						Owner:         planetwars.Opponent,
+						Ships:         15,
+						Source:        2,
+						Dest:          1,
+						TotalTurn:     12,
+						RemainingTurn: 3,
+					},
+					// The fleet below should be ignored.
+					{
+						Owner:         planetwars.Opponent,
+						Ships:         15,
+						Source:        2,
+						Dest:          0,
+						TotalTurn:     15,
+						RemainingTurn: 3,
+					},
+				},
+			}},
+			want: []planetwars.Order{
+				// Planet 1 ships
+				// Current turn: 50
+				// Turn 1: growth +1 = 51
+				// Turn 2: growth +1 and fleet 0 -10 = 42
+				// Turn 3: growth +1 and fleet 1 +15 = 58
+				// Turn 4: growth +1 = 59
+				// Turn 5: growth +1 = 60
+				{Source: 0, Dest: 1, Ships: 61},
+			},
+		},
+		{
+			name: "don't send an order with zero ship",
+			args: args{planetMap: planetwars.Map{
+				Planets: []planetwars.Planet{
+					{
+						ID:       0,
+						Position: planetwars.Point{X: 0, Y: 0},
+						Owner:    planetwars.Myself,
+						Ships:    100,
+						Growth:   1,
+					},
+					{
+						ID:       1,
+						Position: planetwars.Point{X: 0, Y: 5},
+						Owner:    planetwars.Neutral,
+						Ships:    20,
+						Growth:   1,
+					},
+					{
+						ID:       2,
+						Position: planetwars.Point{X: 10, Y: 10},
+						Owner:    planetwars.Neutral,
+						Ships:    30,
+						Growth:   1,
+					},
+				},
+				Fleets: []planetwars.Fleet{
+					{
+						Owner:         planetwars.Myself,
+						Ships:         21,
+						Source:        0,
+						Dest:          1,
+						TotalTurn:     5,
+						RemainingTurn: 2,
+					},
+				},
+			}},
+			want: []planetwars.Order{
+				// Don't send a fleet to the planet 1.
+				{Source: 0, Dest: 2, Ships: 31},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			bot := NewBrunoBot()
 			if got := bot.DoTurn(tt.args.planetMap); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("doTurn() = %v, want %v", got, tt.want)
+				t.Errorf("doTurn() = %#v, want %#v", got, tt.want)
 			}
 		})
 	}
