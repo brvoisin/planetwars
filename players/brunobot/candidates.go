@@ -10,6 +10,9 @@ func computeCandidates(planetMap planetwars.Map) []Candidate {
 	candidates := make([]Candidate, 0, pow2Int(len(planetMap.Planets)))
 	for _, myPlanet := range planetMap.MyPlanets() {
 		for _, planet := range planetMap.Planets {
+			if myPlanet.ID == planet.ID {
+				continue
+			}
 			candidates = append(
 				candidates,
 				Candidate{myPlanet.ID, planet.ID, computeScore(planetMap, myPlanet, planet)},
