@@ -33,8 +33,5 @@ func computeScore(_ planetwars.Map, srcPlanet planetwars.Planet, destPlanet plan
 	if srcPlanet.Owner != planetwars.Myself {
 		return 0
 	}
-	if destPlanet.Owner != planetwars.Myself && destPlanet.Ships < srcPlanet.Ships {
-		return Score(1 / planetwars.Distance(srcPlanet, destPlanet))
-	}
-	return 0
+	return Score(float64(destPlanet.Growth) / (5 * planetwars.Distance(srcPlanet, destPlanet)))
 }
