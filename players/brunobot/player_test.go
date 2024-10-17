@@ -48,6 +48,37 @@ func TestDoTurn(t *testing.T) {
 			},
 		},
 		{
+			name: "prefer planet with bigger growth",
+			args: args{planetMap: planetwars.Map{
+				Planets: []planetwars.Planet{
+					{
+						ID:       0,
+						Position: planetwars.Point{X: 0, Y: 0},
+						Owner:    planetwars.Myself,
+						Ships:    100,
+						Growth:   1,
+					},
+					{
+						ID:       1,
+						Position: planetwars.Point{X: 6, Y: 0},
+						Owner:    planetwars.Neutral,
+						Ships:    50,
+						Growth:   5,
+					},
+					{
+						ID:       2,
+						Position: planetwars.Point{X: 0, Y: 5},
+						Owner:    planetwars.Neutral,
+						Ships:    50,
+						Growth:   1,
+					},
+				},
+			}},
+			want: []planetwars.Order{
+				{Source: 0, Dest: 1, Ships: 51},
+			},
+		},
+		{
 			name: "multiple orders",
 			args: args{planetMap: planetwars.Map{
 				Planets: []planetwars.Planet{
