@@ -16,32 +16,26 @@ func NewBrunoBot() planetwars.Player {
 // DoTurn implements Player.
 func (b *brunoBot) DoTurn(pwMap planetwars.Map) []planetwars.Order {
 	candidates := computeCandidates(pwMap)
-	remainingShips := make(map[planetwars.PlanetID]planetwars.Ships, len(pwMap.Planets))
 	orders := make([]planetwars.Order, 0)
 	for _, candidate := range candidates {
-		_, ok := remainingShips[candidate.Source]
-		if !ok {
-			remainingShips[candidate.Source] = pwMap.PlanetByID(candidate.Source).Ships
-		}
+		myPlanet := pwMap.PlanetByID(candidate.Source)
 		fleetShips := computeNeededFleetShips(pwMap, candidate.Source, candidate.Dest)
-		if fleetShips <= 0 || fleetShips >= remainingShips[candidate.Source] {
+		if fleetShips <= 0 || fleetShips >= myPlanet.Ships {
 			continue
 		}
-		planetShipsAfterOrder := remainingShips[candidate.Source] - fleetShips
-		myPlanet := pwMap.PlanetByID(candidate.Source)
-		myPlanet.Ships = planetShipsAfterOrder
+		myPlanet.Ships -= fleetShips
 		futurePlanet := planetStateAfterFleets(pwMap, myPlanet)
 		if futurePlanet.Owner != myPlanet.Owner {
 			continue
 		}
-		if planetShipsAfterOrder < 10 {
+		if myPlanet.Ships < 10 {
 			continue
 		}
 		orders = append(
 			orders,
 			planetwars.Order{Source: candidate.Source, Dest: candidate.Dest, Ships: fleetShips},
 		)
-		remainingShips[candidate.Source] = planetShipsAfterOrder
+		pwMap.Planets[myPlanet.ID] = myPlanet
 	}
 	return orders
 }
