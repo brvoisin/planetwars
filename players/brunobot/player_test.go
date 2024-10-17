@@ -257,6 +257,37 @@ func TestDoTurn(t *testing.T) {
 			}},
 			want: []planetwars.Order{},
 		},
+		{
+			name: "do not repeat orders from multiple planets",
+			args: args{planetMap: planetwars.Map{
+				Planets: []planetwars.Planet{
+					{
+						ID:       0,
+						Position: planetwars.Point{X: 0, Y: 0},
+						Owner:    planetwars.Myself,
+						Ships:    100,
+						Growth:   1,
+					},
+					{
+						ID:       1,
+						Position: planetwars.Point{X: 0, Y: 5},
+						Owner:    planetwars.Myself,
+						Ships:    100,
+						Growth:   1,
+					},
+					{
+						ID:       2,
+						Position: planetwars.Point{X: 10, Y: 10},
+						Owner:    planetwars.Neutral,
+						Ships:    50,
+						Growth:   1,
+					},
+				},
+			}},
+			want: []planetwars.Order{
+				{Source: 1, Dest: 2, Ships: 51},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

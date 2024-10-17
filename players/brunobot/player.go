@@ -36,6 +36,15 @@ func (b *brunoBot) DoTurn(pwMap planetwars.Map) []planetwars.Order {
 			planetwars.Order{Source: candidate.Source, Dest: candidate.Dest, Ships: fleetShips},
 		)
 		pwMap.Planets[myPlanet.ID] = myPlanet
+		totalTurn := planetwars.Trun(planetwars.Distance(myPlanet, pwMap.PlanetByID(candidate.Dest)))
+		pwMap.Fleets = append(pwMap.Fleets, planetwars.Fleet{
+			Owner:         myPlanet.Owner,
+			Ships:         fleetShips,
+			Source:        candidate.Source,
+			Dest:          candidate.Dest,
+			TotalTurn:     totalTurn,
+			RemainingTurn: totalTurn,
+		})
 	}
 	return orders
 }
@@ -47,7 +56,7 @@ func computeNeededFleetShips(
 ) planetwars.Ships {
 	pSrc := pwMap.PlanetByID(source)
 	pDest := pwMap.PlanetByID(dest)
-	result := pDest.Ships
+	result := -shipSign(pSrc.Owner, pDest.Owner) * pDest.Ships
 	if pDest.Owner == planetwars.Opponent {
 		result += planetwars.Ships(planetwars.Distance(pSrc, pDest) * float64(pDest.Growth))
 	}
@@ -70,11 +79,7 @@ func planetStateAfterFleets(pwMap planetwars.Map, planet planetwars.Planet) plan
 	turn := planetwars.Trun(0)
 	for _, f := range fleetsTo {
 		futurePlanet.Ships += planetwars.Ships(futurePlanet.Growth) * planetwars.Ships(f.RemainingTurn-turn)
-		shipSign := 1
-		if futurePlanet.Owner != f.Owner {
-			shipSign = -1
-		}
-		futurePlanet.Ships += planetwars.Ships(shipSign) * f.Ships
+		futurePlanet.Ships += shipSign(futurePlanet.Owner, f.Owner) * f.Ships
 		if futurePlanet.Ships == 0 {
 			futurePlanet.Owner = planetwars.Neutral
 		}
@@ -85,4 +90,12 @@ func planetStateAfterFleets(pwMap planetwars.Map, planet planetwars.Planet) plan
 		turn = f.RemainingTurn
 	}
 	return futurePlanet
+}
+
+func shipSign(o1, o2 planetwars.Owner) planetwars.Ships {
+	if o1 != o2 {
+		return -1
+	} else {
+		return 1
+	}
 }
