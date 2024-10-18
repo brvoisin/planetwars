@@ -15,7 +15,7 @@ func computeCandidates(planetMap planetwars.Map) []Candidate {
 			}
 			candidates = append(
 				candidates,
-				Candidate{myPlanet.ID, planet.ID, computeScore(planetMap, myPlanet, planet)},
+				Candidate{myPlanet.ID, planet.ID, computeScore(myPlanet, planet)},
 			)
 		}
 	}
@@ -29,7 +29,7 @@ func pow2Int(x int) int {
 	return x * x
 }
 
-func computeScore(_ planetwars.Map, srcPlanet planetwars.Planet, destPlanet planetwars.Planet) Score {
+func computeScore(srcPlanet planetwars.Planet, destPlanet planetwars.Planet) Score {
 	if srcPlanet.Owner != planetwars.Myself {
 		return 0
 	}
