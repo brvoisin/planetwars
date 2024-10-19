@@ -132,14 +132,14 @@ func TestDoTurn(t *testing.T) {
 						ID:       1,
 						Position: planetwars.Point{X: 0, Y: 5},
 						Owner:    planetwars.Opponent,
-						Ships:    50,
+						Ships:    40,
 						Growth:   2,
 					},
 				},
 			}},
 			want: []planetwars.Order{
 				// The ships on opponent planet will increase by 10 in 5 turns.
-				{Source: 0, Dest: 1, Ships: 61},
+				{Source: 0, Dest: 1, Ships: 51},
 			},
 		},
 		{
@@ -165,6 +165,13 @@ func TestDoTurn(t *testing.T) {
 						Position: planetwars.Point{X: 10, Y: 10},
 						Owner:    planetwars.Opponent,
 						Ships:    100,
+						Growth:   1,
+					},
+					{
+						ID:       3,
+						Position: planetwars.Point{X: 6, Y: 7},
+						Owner:    planetwars.Myself,
+						Ships:    50,
 						Growth:   1,
 					},
 				},
@@ -392,6 +399,35 @@ func TestDoTurn(t *testing.T) {
 						Dest:          2,
 						TotalTurn:     5,
 						RemainingTurn: 4,
+					},
+				},
+			}},
+			want: []planetwars.Order{},
+		},
+		{
+			name: "don't endanger my only one planet",
+			args: args{planetMap: planetwars.Map{
+				Planets: []planetwars.Planet{
+					{
+						ID:       0,
+						Position: planetwars.Point{X: 0, Y: 0},
+						Owner:    planetwars.Myself,
+						Ships:    100,
+						Growth:   1,
+					},
+					{
+						ID:       1,
+						Position: planetwars.Point{X: 2, Y: 0},
+						Owner:    planetwars.Neutral,
+						Ships:    5,
+						Growth:   1,
+					},
+					{
+						ID:       2,
+						Position: planetwars.Point{X: 5, Y: 0},
+						Owner:    planetwars.Opponent,
+						Ships:    100,
+						Growth:   1,
 					},
 				},
 			}},
