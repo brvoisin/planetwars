@@ -35,9 +35,6 @@ func (b *brunoBot) DoTurn(pwMap planetwars.Map) []planetwars.Order {
 		if myFuturePlanet.Owner != myPlanet.Owner {
 			continue
 		}
-		if myPlanet.Ships < 10 {
-			continue
-		}
 		orders = append(
 			orders,
 			planetwars.Order{Source: candidate.Source, Dest: candidate.Dest, Ships: fleetShips},

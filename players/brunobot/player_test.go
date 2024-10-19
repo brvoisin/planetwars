@@ -86,7 +86,7 @@ func TestDoTurn(t *testing.T) {
 						ID:       0,
 						Position: planetwars.Point{X: 0, Y: 0},
 						Owner:    planetwars.Myself,
-						Ships:    100,
+						Ships:    80,
 						Growth:   1,
 					},
 					{
