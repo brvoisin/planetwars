@@ -17,6 +17,10 @@ func NewBrunoBot() planetwars.Player {
 
 // DoTurn implements Player.
 func (b *brunoBot) DoTurn(pwMap planetwars.Map) []planetwars.Order {
+	myPlanets := pwMap.MyPlanets()
+	if len(myPlanets) == 1 {
+		pwMap = worstFictiveScenario(pwMap, myPlanets[0])
+	}
 	candidates := computeCandidates(pwMap)
 	orders := make([]planetwars.Order, 0)
 	for _, candidate := range candidates {
@@ -51,6 +55,26 @@ func (b *brunoBot) DoTurn(pwMap planetwars.Map) []planetwars.Order {
 		})
 	}
 	return orders
+}
+
+func worstFictiveScenario(pwMap planetwars.Map, myPlanet planetwars.Planet) planetwars.Map {
+	opponentPlanets := planetwars.Filter(
+		pwMap.Planets,
+		func(p planetwars.Planet) bool { return p.Owner == planetwars.Opponent },
+	)
+	for _, opponentPlanet := range opponentPlanets {
+		totalTurn := planetwars.Trun(planetwars.Distance(opponentPlanet, myPlanet))
+		fictiveFleet := planetwars.Fleet{
+			Owner:         opponentPlanet.Owner,
+			Ships:         opponentPlanet.Ships,
+			Source:        opponentPlanet.ID,
+			Dest:          myPlanet.ID,
+			TotalTurn:     totalTurn,
+			RemainingTurn: totalTurn,
+		}
+		pwMap.Fleets = append(pwMap.Fleets, fictiveFleet)
+	}
+	return pwMap
 }
 
 func computeNeededFleetShips(
