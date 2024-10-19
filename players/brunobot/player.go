@@ -22,13 +22,17 @@ func (b *brunoBot) DoTurn(pwMap planetwars.Map) []planetwars.Order {
 	for _, candidate := range candidates {
 		myPlanet := pwMap.PlanetByID(candidate.Source)
 		destPlanet := pwMap.PlanetByID(candidate.Dest)
+		futureDestPlanet := computePlanetState(pwMap, destPlanet, untilLastFleet)
+		if futureDestPlanet.Owner == myPlanet.Owner {
+			continue
+		}
 		fleetShips := computeNeededFleetShips(pwMap, myPlanet, destPlanet)
 		if fleetShips <= 0 || fleetShips >= myPlanet.Ships {
 			continue
 		}
 		myPlanet.Ships -= fleetShips
-		futurePlanet := computePlanetState(pwMap, myPlanet, untilLastFleet)
-		if futurePlanet.Owner != myPlanet.Owner {
+		myFuturePlanet := computePlanetState(pwMap, myPlanet, untilLastFleet)
+		if myFuturePlanet.Owner != myPlanet.Owner {
 			continue
 		}
 		if myPlanet.Ships < 10 {
