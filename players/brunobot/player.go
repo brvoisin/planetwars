@@ -1,7 +1,6 @@
 package main
 
 import (
-	"math"
 	"sort"
 
 	"github.com/brvoisin/planetwars"
@@ -101,7 +100,7 @@ func computePlanetState(pwMap planetwars.Map, planet planetwars.Planet, maxTurn 
 		futurePlanet.Ships += shipSign(futurePlanet.Owner, f.Owner) * f.Ships
 		if futurePlanet.Ships < 0 {
 			futurePlanet.Owner = f.Owner
-			futurePlanet.Ships = planetwars.Ships(math.Abs(float64(futurePlanet.Ships)))
+			futurePlanet.Ships = -futurePlanet.Ships
 		}
 	}
 	if maxTurn != untilLastFleet && turn < maxTurn && futurePlanet.Owner != planetwars.Neutral {
