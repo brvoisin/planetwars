@@ -31,7 +31,7 @@ func (b *brunoBot) DoTurn(pwMap planetwars.Map) []planetwars.Order {
 			continue
 		}
 		fleetShips := computeNeededFleetShips(pwMap, myPlanet, destPlanet)
-		if fleetShips <= 0 || fleetShips >= myPlanet.Ships {
+		if fleetShips <= 0 || fleetShips > myPlanet.Ships {
 			continue
 		}
 		myPlanet.Ships -= fleetShips
@@ -99,9 +99,6 @@ func computePlanetState(pwMap planetwars.Map, planet planetwars.Planet, maxTurn 
 			futurePlanet.Ships += planetwars.Ships(futurePlanet.Growth) * planetwars.Ships(turnJump)
 		}
 		futurePlanet.Ships += shipSign(futurePlanet.Owner, f.Owner) * f.Ships
-		if futurePlanet.Ships == 0 {
-			futurePlanet.Owner = planetwars.Neutral
-		}
 		if futurePlanet.Ships < 0 {
 			futurePlanet.Owner = f.Owner
 			futurePlanet.Ships = planetwars.Ships(math.Abs(float64(futurePlanet.Ships)))
