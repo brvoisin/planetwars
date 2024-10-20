@@ -43,16 +43,7 @@ func (b *brunoBot) DoTurn(pwMap planetwars.Map) []planetwars.Order {
 			orders,
 			planetwars.Order{Source: candidate.Source, Dest: candidate.Dest, Ships: fleetShips},
 		)
-		pwMap.Planets[myPlanet.ID] = myPlanet
-		totalTurn := planetwars.Trun(planetwars.Distance(myPlanet, destPlanet))
-		pwMap.Fleets = append(pwMap.Fleets, planetwars.Fleet{
-			Owner:         myPlanet.Owner,
-			Ships:         fleetShips,
-			Source:        candidate.Source,
-			Dest:          candidate.Dest,
-			TotalTurn:     totalTurn,
-			RemainingTurn: totalTurn,
-		})
+		pwMap = updateMapAfterOrder(pwMap, myPlanet, destPlanet, fleetShips)
 	}
 	return orders
 }
@@ -128,4 +119,23 @@ func shipSign(o1, o2 planetwars.Owner) planetwars.Ships {
 	} else {
 		return 1
 	}
+}
+
+func updateMapAfterOrder(
+	pwMap planetwars.Map,
+	myPlanet planetwars.Planet,
+	destPlanet planetwars.Planet,
+	fleetShips planetwars.Ships,
+) planetwars.Map {
+	pwMap.Planets[myPlanet.ID] = myPlanet
+	totalTurn := planetwars.Trun(planetwars.Distance(myPlanet, destPlanet))
+	pwMap.Fleets = append(pwMap.Fleets, planetwars.Fleet{
+		Owner:         myPlanet.Owner,
+		Ships:         fleetShips,
+		Source:        myPlanet.ID,
+		Dest:          destPlanet.ID,
+		TotalTurn:     totalTurn,
+		RemainingTurn: totalTurn,
+	})
+	return pwMap
 }
