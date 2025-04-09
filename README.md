@@ -9,5 +9,5 @@ Add your bot implementation in `players/yourbotname` that could be copied from
 Build it with:
 
 ```
-go build -o build/ github.com/brvoisin/planetwars/players/yourbotname/
+go build -o build/ ./players/yourbotname/
 ```
